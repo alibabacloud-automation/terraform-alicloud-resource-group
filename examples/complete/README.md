@@ -23,6 +23,8 @@ To destroy the resources:
 terraform destroy
 ```
 
+**Cost**: This example creates resources that may incur costs. Remember to destroy resources when testing is complete.
+
 ## What This Example Creates
 
 1. **Resource Group**: A new resource group with custom display name and tags
@@ -79,20 +81,3 @@ module "complete" {
 }
 ```
 
-## Requirements
-
-| Name | Version |
-|------|---------|
-| terraform | >= 1.0 |
-| alicloud | >= 1.120.0 |
-
-## Outputs
-
-| Name | Description |
-|------|-------------|
-| resource_group_id | The ID of the created resource group |
-| resource_group_name | The name of the created resource group |
-| ram_user_name | The name of the created RAM user |
-| ram_user_id | The ID of the created RAM user |
-| custom_policies | The created custom policies |
-| policy_attachments | The policy attachments |

@@ -28,6 +28,8 @@ terraform destroy
 
 **Note**: This will only destroy the resource group and policy attachment. The existing RAM user will not be modified or deleted.
 
+**Cost**: This example creates resources that may incur costs. Remember to destroy resources when testing is complete.
+
 ## What This Example Creates
 
 1. **Resource Group**: A new resource group with custom display name and tags
@@ -75,19 +77,3 @@ You can customize the example by providing values:
 ```bash
 terraform apply -var="name=my-resource-group" -var="existing_user=my-existing-user"
 ```
-
-## Requirements
-
-| Name | Version |
-|------|---------|
-| terraform | >= 1.0 |
-| alicloud | >= 1.120.0 |
-
-## Outputs
-
-| Name | Description |
-|------|-------------|
-| resource_group_id | The ID of the created resource group |
-| resource_group_name | The name of the created resource group |
-| ram_user_name | The name of the existing RAM user |
-| policy_attachments | The policy attachments |
