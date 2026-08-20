@@ -123,6 +123,6 @@ jobs:
           echo "branch is" ${{github.event.pull_request.head.ref}}
       - name: e2e test
         run: |
-          objectPath="github-action/${{github.repository}}/e2e/Action-${{github.run_number}}-${{github.run_id}}"
+          objectPath="github-action/${{github.repository}}/e2e/Action-${{github.run_number}}-${{github.run_id}}-${{github.run_attempt}}"
           go run scripts/curl_fc_trigger.go ${{github.event.pull_request.head.ref}} ${{github.event.pull_request.head.repo.full_name}} ${objectPath}
           go run scripts/e2e_check.go ${objectPath}

@@ -19,7 +19,7 @@ jobs:
         id: extract_branch
       - name: weekly e2e test
         run: |
-          objectPath="github-action/${{github.repository}}/weekly-e2e/Action-${{github.run_number}}-${{github.run_id}}"
+          objectPath="github-action/${{github.repository}}/weekly-e2e/Action-${{github.run_number}}-${{github.run_id}}-${{github.run_attempt}}"
           echo "default branch: ${{ steps.extract_branch.outputs.branch }}"
           go run scripts/curl_fc_trigger.go ${{ steps.extract_branch.outputs.branch }} ${{github.repository}} ${objectPath}
           go run scripts/e2e_check.go ${objectPath}
