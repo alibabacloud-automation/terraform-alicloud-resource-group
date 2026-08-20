@@ -13,13 +13,34 @@ jobs:
     steps:
       - name: checkout
         uses: actions/checkout@v4
+      - name: Get job ID
+        id: set-job-id
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+          JOB_NAME: weekly e2e check
+        run: |
+          for attempt in {1..12}; do
+            job_id="$(curl --fail --silent --show-error --retry 3 \
+              -H "Authorization: Bearer $GITHUB_TOKEN" \
+              -H "Accept: application/vnd.github+json" \
+              "$GITHUB_API_URL/repos/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID/jobs?per_page=100" |
+              jq -r --arg job_name "$JOB_NAME" '.jobs[] | select(.name == $job_name) | .id' |
+              head -n 1)"
+            if [[ "$job_id" =~ ^[0-9]+$ ]]; then
+              echo "job_id=$job_id" >> "$GITHUB_OUTPUT"
+              exit 0
+            fi
+            sleep 5
+          done
+          echo "Failed to find job ID for $JOB_NAME" >&2
+          exit 1
       - name: Extract branch name
         shell: bash
         run: echo "branch=${GITHUB_REF#refs/heads/}" >> "$GITHUB_OUTPUT"
         id: extract_branch
       - name: weekly e2e test
         run: |
-          objectPath="github-action/${{github.repository}}/weekly-e2e/Action-${{github.run_number}}-${{github.run_id}}-${{github.run_attempt}}"
+          objectPath="github-action/${{github.repository}}/weekly-e2e/Action-${{github.run_number}}-${{github.run_id}}-${{ steps.set-job-id.outputs.job_id }}"
           echo "default branch: ${{ steps.extract_branch.outputs.branch }}"
           go run scripts/curl_fc_trigger.go ${{ steps.extract_branch.outputs.branch }} ${{github.repository}} ${objectPath}
           go run scripts/e2e_check.go ${objectPath}
